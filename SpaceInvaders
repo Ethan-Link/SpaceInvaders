@@ -15,7 +15,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
    private int playerMoveAmount;    // the player's horizontal move amount in each timer step
    private int bulletMoveAmount;    // the bullet's vertical move amount in each timer step
    private int playerScore;         // player score
-   private final static int SCREEN_WIDTH = 300;   // width of screen
+   private final static int SCREEN_WIDTH =  800;   // width of screen
      
    public TimerDemo1()             // default constructor
    {
@@ -23,7 +23,6 @@ public class TimerDemo1 extends JFrame implements KeyListener
       enemyX = 60;                  // initial horizontal position of enemy
      
       enemyMoveAmount = 10;  
-      playerMoveAmount = 10;
       bulletMoveAmount = 10;    
      
       bulletX = -10;                // initially placing bullet off the screen so its not visible
@@ -42,7 +41,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
             {
                enemyMoveAmount = 10;
             }
-            else if (enemyX >= SCREEN_WIDTH) // right boundary detection for enemy
+            else if (enemyX >= SCREEN_WIDTH - 20) // right boundary detection for enemy
             {
                enemyMoveAmount = -10;
             }
@@ -64,7 +63,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
             {
                playerMoveAmount = 10;
             }
-            else if (playerX >= SCREEN_WIDTH)   // right boundary detection for player
+            else if (playerX >= SCREEN_WIDTH - 20)   // right boundary detection for player
             {
                playerMoveAmount = -10;
             }
@@ -122,6 +121,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
       g.setColor(Color.blue);                              // update status
       g.drawString("score: " + playerScore, 30, 250);
       g.drawString("press spacebar to fire bullet", 10, 280);
+      g.drawString("press A to move left", 10, 300);
    }
   
    public void keyTyped(KeyEvent key)
@@ -133,6 +133,9 @@ public class TimerDemo1 extends JFrame implements KeyListener
          bulletY = 180;          
          timerBullet.start();
       }
+      if (key.getKeyChar() == 'A')
+      {
+         
           
    }
   
