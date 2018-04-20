@@ -5,24 +5,28 @@ import javax.swing.*;
 public class TimerDemo1 extends JFrame implements KeyListener
 {
    private Timer enemyTimer;        // propels top enemy horizontally across screen
-   private Timer playerTimer;       // propels bottom player horizontally across screen
+   private Timer playerTimerLeft;   // propels bottom player horizontally left across screen
+   private Timer playerTimerRight;  // propels bottom player horizontally right across screen
    private Timer timerBullet;       // propels bottom player's bullet vertically up the screen
    private int playerX;             // the x location of player
    private int enemyX;              // the x location of enemy
+   private int enemyY;
    private int bulletY;             // the y location of player's bullet
    private int bulletX;             // the x location of player's bullet
    private int enemyMoveAmount;     // the enemy's horizontal move amount in each timer step
    private int playerMoveAmount;    // the player's horizontal move amount in each timer step
    private int bulletMoveAmount;    // the bullet's vertical move amount in each timer step
    private int playerScore;         // player score
-   private final static int SCREEN_WIDTH =  800;   // width of screen
+   private final static int SCREEN_WIDTH =  500;   // width of screen
      
    public TimerDemo1()             // default constructor
    {
       playerX = 200;                // initial horizontal position of player                
       enemyX = 60;                  // initial horizontal position of enemy
-     
-      enemyMoveAmount = 10;  
+      
+      enemyY = 20;
+      enemyMoveAmount = 10;
+      playerMoveAmount = 10;  
       bulletMoveAmount = 10;    
      
       bulletX = -10;                // initially placing bullet off the screen so its not visible
@@ -39,10 +43,12 @@ public class TimerDemo1 extends JFrame implements KeyListener
 
             if (enemyX <= 0)                 // left boundary  detection for enemy
             {
+               enemyY += 20;
                enemyMoveAmount = 10;
             }
             else if (enemyX >= SCREEN_WIDTH - 20) // right boundary detection for enemy
             {
+               enemyY += 20;
                enemyMoveAmount = -10;
             }
              
@@ -53,7 +59,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
       });  
       
       // player moving back and forth horizontally
-      playerTimer = new Timer(200, new ActionListener()
+      playerTimerLeft = new Timer(200, new ActionListener()
       {
 
          public void actionPerformed(ActionEvent evt)
@@ -61,11 +67,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
 
             if (playerX <= 0)                   // left boundary detection for player
             {
-               playerMoveAmount = 10;
-            }
-            else if (playerX >= SCREEN_WIDTH - 20)   // right boundary detection for player
-            {
-               playerMoveAmount = -10;
+               playerMoveAmount = 0;
             }
              
             playerX += playerMoveAmount;        // moving player horizontally across screen
@@ -73,7 +75,24 @@ public class TimerDemo1 extends JFrame implements KeyListener
          }
 
       });  
-       
+      
+      playerTimerRight = new Timer(200, new ActionListener()
+      {
+
+         public void actionPerformed(ActionEvent evt)
+         {
+
+            if (playerX >= SCREEN_WIDTH - 20)   // right boundary detection for player
+            {
+               playerMoveAmount = 0;
+            }
+            
+            playerX += playerMoveAmount;        // moving player horizontally across screen
+            repaint();
+         }
+
+      });  
+
       // bullet moving up the screen
       timerBullet = new Timer(100, new ActionListener()
       {
@@ -101,7 +120,6 @@ public class TimerDemo1 extends JFrame implements KeyListener
       });  
            
       enemyTimer.start();
-      playerTimer.start();
    }
 
    public void paint(Graphics g)
@@ -111,9 +129,9 @@ public class TimerDemo1 extends JFrame implements KeyListener
       g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);         // repaint background
      
       g.setColor(Color.red);                              // repaint enemy at top of screen
-      g.fillRect(enemyX, 20, 20, 20);
+      g.fillRect(enemyX, 20, 20, enemyY);
           
-      g.setColor(Color.red);                               // repaint player at bottom of screen  
+      g.setColor(Color.cyan);                               // repaint player at bottom of screen  
       g.fillRect(playerX, 200, 20, 20);
                                       
       g.drawLine(bulletX, bulletY, bulletX, bulletY - 10);  // repaint bullet
@@ -121,7 +139,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
       g.setColor(Color.blue);                              // update status
       g.drawString("score: " + playerScore, 30, 250);
       g.drawString("press spacebar to fire bullet", 10, 280);
-      g.drawString("press A to move left", 10, 300);
+      g.drawString("press a to move left and d to mmove right", 10, 300);
    }
   
    public void keyTyped(KeyEvent key)
@@ -133,11 +151,20 @@ public class TimerDemo1 extends JFrame implements KeyListener
          bulletY = 180;          
          timerBullet.start();
       }
-      if (key.getKeyChar() == 'A')
+      if (key.getKeyChar() == 'a')
       {
+         playerTimerRight.stop();
+         playerMoveAmount = -10;
+         playerTimerLeft.start();
+      }
+      if (key.getKeyChar() == 'd' )
+      {
+         playerTimerLeft.stop();
+         playerMoveAmount = 10;
+         playerTimerRight.start();
+      }
          
-          
-   }
+    }
   
    public void keyPressed(KeyEvent e) { }
    public void keyReleased(KeyEvent e) { }
@@ -155,6 +182,6 @@ public class TimerDemo1 extends JFrame implements KeyListener
 
 
 // Add way for player to move himself using playerTimer that checks boundaries
-// Make smaller enemies with less health in fornt of the larger back enemies or vice versa
+// Make smaller enemies with less health in front of the larger back enemies or vice versa
 // Use sprites from google players and enemies (maybe laser)
 // Fix the issue in the boundary checks so that the right boundary checker checks for the x + 10 so that is dosnt go off the screen before bouncing
