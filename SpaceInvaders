@@ -9,11 +9,14 @@ public class TimerDemo1 extends JFrame implements KeyListener
    private Timer playerTimerRight;  // propels bottom player horizontally right across screen
    private Timer timerBullet;       // propels bottom player's bullet vertically up the screen
    private int playerX;             // the x location of player
-   private int enemyX;              // the x location of enemy
-   private int enemyY;
+   private int enemy0X;
+   private int enemy1X;             // the x location of enemy
+   private int enemy0Y;
+   private int enemy1Y;
    private int bulletY;             // the y location of player's bullet
    private int bulletX;             // the x location of player's bullet
-   private int enemyMoveAmount;     // the enemy's horizontal move amount in each timer step
+   private int enemyMoveAmount0;     // the enemy's horizontal move amount in each timer step
+   private int enemyMoveAmount1;
    private int playerMoveAmount;    // the player's horizontal move amount in each timer step
    private int bulletMoveAmount;    // the bullet's vertical move amount in each timer step
    private int playerScore;         // player score
@@ -22,10 +25,13 @@ public class TimerDemo1 extends JFrame implements KeyListener
    public TimerDemo1()             // default constructor
    {
       playerX = 200;                // initial horizontal position of player                
-      enemyX = 60;                  // initial horizontal position of enemy
+      enemy0X = 20;                  // initial horizontal position of enemy
+      enemy1X = 50;
       
-      enemyY = 20;
-      enemyMoveAmount = 10;
+      enemy1Y = 20;
+      enemy0Y = 20;
+      enemyMoveAmount0 = 5;
+      enemyMoveAmount1 = 5;
       playerMoveAmount = 10;  
       bulletMoveAmount = 10;    
      
@@ -41,18 +47,29 @@ public class TimerDemo1 extends JFrame implements KeyListener
          public void actionPerformed(ActionEvent evt)
          {
 
-            if (enemyX <= 0)                 // left boundary  detection for enemy
+            if (enemy0X <= 0)                 // left boundary  detection for enemy 0
             {
-               enemyY += 20;
-               enemyMoveAmount = 10;
+               enemy0Y += 30;
+               enemyMoveAmount0 = 5;
             }
-            else if (enemyX >= SCREEN_WIDTH - 20) // right boundary detection for enemy
+            else if (enemy0X >= SCREEN_WIDTH - 20) // right boundary detection for enemy 0
             {
-               enemyY += 20;
-               enemyMoveAmount = -10;
+               enemy0Y += 30;
+               enemyMoveAmount0 = -5;
             }
-             
-            enemyX += enemyMoveAmount;       // moving enemy horizontally across screen
+            else if (enemy1X <= 0)                 // left boundary  detection for enemy 0 
+            {
+               enemy1Y += 30;
+               enemyMoveAmount1 = 5;
+            }
+            else if (enemy1X >= SCREEN_WIDTH - 20) // right boundary detection for enemy 1
+            {
+               enemy1Y += 30;
+               enemyMoveAmount1 = -5;
+            }
+            
+            enemy0X += enemyMoveAmount0;
+            enemy1X += enemyMoveAmount1;       // moving enemy 1 horizontally across screen
             repaint();
          }
 
@@ -102,11 +119,15 @@ public class TimerDemo1 extends JFrame implements KeyListener
             bulletY -= bulletMoveAmount;        // moving bullet vertically up the screen
            
             // detecting collision with enemy
-            if (bulletX >= enemyX && bulletX <= enemyX + 20 // within the width of the enemy
-                           && bulletY <= 10 && bulletY >= 0)// within the vertical span of the enemy
+            if (bulletX >= enemy0X && bulletX <= enemy0X + 20 && bulletY <= enemy0Y + 20 && bulletY >= enemy0Y)
             {
                playerScore++;
                timerBullet.stop();              // stop bullet immediately to avoid double score                         
+            }
+            else if (bulletX >= enemy1X && bulletX <= enemy1X + 20 && bulletY <= enemy1Y + 20 && bulletY >= enemy1Y)
+            {
+               playerScore++;
+               timerBullet.stop();
             }
             else if (bulletY <= 0)              // bullet boundary detection at top of screen
             {
@@ -129,8 +150,9 @@ public class TimerDemo1 extends JFrame implements KeyListener
       g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);         // repaint background
      
       g.setColor(Color.red);                              // repaint enemy at top of screen
-      g.fillRect(enemyX, 20, 20, enemyY);
-          
+      g.fillRect(enemy0X, enemy0Y, 20, 20);
+      g.fillRect(enemy1X, enemy1Y, 20, 20);
+
       g.setColor(Color.cyan);                               // repaint player at bottom of screen  
       g.fillRect(playerX, 200, 20, 20);
                                       
