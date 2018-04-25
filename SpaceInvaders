@@ -121,12 +121,12 @@ public class TimerDemo1 extends JFrame implements KeyListener
             // detecting collision with enemy
             if (bulletX >= enemy0X && bulletX <= enemy0X + 20 && bulletY <= enemy0Y + 20 && bulletY >= enemy0Y)
             {
-               playerScore++;
+               enemy0Y = 500;
                timerBullet.stop();              // stop bullet immediately to avoid double score                         
             }
             else if (bulletX >= enemy1X && bulletX <= enemy1X + 20 && bulletY <= enemy1Y + 20 && bulletY >= enemy1Y)
             {
-               playerScore++;
+               enemy1Y = 500;
                timerBullet.stop();
             }
             else if (bulletY <= 0)              // bullet boundary detection at top of screen
@@ -161,7 +161,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
       g.setColor(Color.blue);                              // update status
       g.drawString("score: " + playerScore, 30, 250);
       g.drawString("press spacebar to fire bullet", 10, 280);
-      g.drawString("press a to move left and d to mmove right", 10, 300);
+      g.drawString("press a to move left and d to move right", 10, 300);
    }
   
    public void keyTyped(KeyEvent key)
@@ -198,7 +198,7 @@ public class TimerDemo1 extends JFrame implements KeyListener
       prog.setSize(SCREEN_WIDTH, SCREEN_WIDTH);
       prog.setVisible(true);
    }// end of main method
-
+   
 }// end of class
 
 
